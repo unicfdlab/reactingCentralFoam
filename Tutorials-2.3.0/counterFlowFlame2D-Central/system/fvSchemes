@@ -1,0 +1,103 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.3.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default         Euler;
+}
+
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+scalarScheme vanAlbada;
+vectorScheme vanAlbadaV;
+
+divSchemes
+{
+    default         none;
+
+    div(phiPos,U)      Gauss $vectorScheme;
+    div(phiNeg,U)      Gauss $vectorScheme;
+    
+    div(phiPos,Yi)   Gauss $scalarScheme;
+    div(phiNeg,Yi)   Gauss $scalarScheme;
+
+    div(phiPos,h)   Gauss $scalarScheme;
+    div(phiNeg,h)   Gauss $scalarScheme;
+
+    div(phiPos,K)   Gauss $scalarScheme;
+    div(phiNeg,K)   Gauss $scalarScheme;
+    
+    div(phid_pos,p)	Gauss $scalarScheme;
+    div(phid_neg,p)	Gauss $scalarScheme;
+    
+    div(phi,epsilon) Gauss $scalarScheme;
+    div(phi,k) Gauss $scalarScheme;
+    div((muEff*dev2(T(grad(U))))) Gauss linear;
+    
+    //approximation for diffusion
+    div(rhoi*Uri,hi)	Gauss linear;
+    
+    //intermediate
+    div((-devRhoReff&U)) Gauss linear;
+    
+    div(phiNeg,Ek)	Gauss vanAlbada;
+    div(phiPos,Ek)	Gauss vanAlbada;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default	none;
+
+    /*
+     *	Interpolations that are critical for KT scheme
+     */
+    reconstruct(psi)		linear;
+    reconstruct(p)		$scalarScheme;
+    reconstruct(U)		$vectorScheme;
+    reconstruct(Dp)		$scalarScheme;
+
+    interpolate(rho)		linear;
+    interpolate(muEff)		linear;
+}
+
+snGradSchemes
+{
+    default         corrected;
+}
+
+fluxRequired
+{
+    default         no;
+    p;
+    h;
+    O2;
+    H2O;
+    N2;
+    CH4;
+    CO2;
+}
+
+
+// ************************************************************************* //
