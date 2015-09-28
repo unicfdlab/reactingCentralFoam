@@ -37,6 +37,6 @@
     label nTotalBadCells = badQualityCells.size();
     reduce(nTotalBadCells, sumOp<label>());
     
-    Info << badQualityCells.size() << " cells marked as bad" << endl
+    Info << nTotalBadCells << " cells marked as bad" << endl
     << "Standard fvm pressure gradients will be applied in this cells instead of KT" << endl;
 }
