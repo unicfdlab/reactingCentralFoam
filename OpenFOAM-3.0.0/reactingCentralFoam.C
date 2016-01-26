@@ -91,11 +91,21 @@ int main(int argc, char *argv[])
 	    Y[iCmpt].oldTime();
 	}
 
-	solve
-	(
-	    fvm::ddt(rho) + fvc::div(phi)
-	);
-
+        {
+            fvScalarMatrix rhoEqn
+            (
+                fvm::ddt(rho) + fvc::div(phi)
+                ==
+                fvOptions(rho)
+            );
+            
+            fvOptions.constrain(rhoEqn);
+            
+            rhoEqn.solve();
+            
+            fvOptions.correct(rho);
+        }
+	
         while (pimple.loop())
         {
 	    // Create limiter field for mass and energy fluxes
